@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+
+  postgres:
+    container_name: 'recommender-backend-db'
+    image: 'postgres:latest'
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=masamonoke'
+      - 'POSTGRES_DB=recommender-backend'
+      - 'POSTGRES_PASSWORD=password'
