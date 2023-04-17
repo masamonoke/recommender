@@ -39,11 +39,13 @@ impl JwtToken {
         match token {
             Ok(token) => {
                 let claims = token.claims();
-                return Ok(JwtToken { 
-                    user_id: claims["user_id"], 
-                    created_date: claims["created_date"],
-                    body: encoded_token 
-                })
+                return Ok(
+                    JwtToken { 
+                        user_id: claims["user_id"], 
+                        created_date: claims["created_date"],
+                        body: encoded_token 
+                    }
+                )
             },
             Err(_) => return Err("Could not decode token")
         }
