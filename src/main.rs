@@ -11,12 +11,14 @@ mod database;
 mod json_serialization;
 mod auth;
 
-extern crate dotenv;
-use env_logger;
+//extern crate dotenv;
+//use env_logger;
+use dotenv::dotenv;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init();
+    dotenv().ok();
+    pretty_env_logger::init();
     HttpServer::new(|| {
         
         let cors = Cors::permissive();
