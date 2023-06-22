@@ -7,7 +7,7 @@ use crate::model::user::new_user::NewUser;
 use crate::schema::users;
 
 pub async fn create(new_user: web::Json<NewUserSchema>) -> HttpResponse {
-    let connection = establish_connection();
+    let mut connection = establish_connection();
 
     let name = new_user.name.clone();
     let email = new_user.email.clone();
@@ -16,7 +16,7 @@ pub async fn create(new_user: web::Json<NewUserSchema>) -> HttpResponse {
 
     let insert_result = diesel::insert_into(users::table)
         .values(&new_user)
-        .execute(&connection);
+        .execute(&mut connection);
 
     match insert_result {
         Ok(_) => HttpResponse::Created().await.unwrap(),

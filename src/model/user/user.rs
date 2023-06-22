@@ -5,7 +5,7 @@ use bcrypt::verify;
 use crate::schema::users;
 
 #[derive(Queryable, Clone, Identifiable)]
-#[table_name="users"]
+#[diesel(table_name = users)]
 pub struct User {
     pub id: i32,
     pub name: String,

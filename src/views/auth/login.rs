@@ -12,10 +12,10 @@ pub async fn login(credentials: web::Json<Login>) -> HttpResponse {
     let username = credentials.username.clone();
     let password = credentials.password.clone();
 
-    let connection = establish_connection();
+    let mut connection = establish_connection();
     let users = users::table
         .filter(users::columns::name.eq(username.as_str()))
-        .load::<User>(&connection)
+        .load::<User>(&mut connection)
         .unwrap();
     
     if users.len() == 0 {

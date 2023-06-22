@@ -1,3 +1,4 @@
 /target
-.idea
+.*
 rusty-tags.vi
+venv

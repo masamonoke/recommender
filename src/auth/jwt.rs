@@ -3,11 +3,10 @@ extern crate jwt;
 extern crate sha2;
 
 use hmac::{Hmac, NewMac};
-use jwt::{Header, Token, VerifyWithKey, token};
+use jwt::{Header, Token, VerifyWithKey};
 use jwt::SignWithKey;
 use sha2::Sha256;
 use std::collections::BTreeMap;
-use actix_web::HttpRequest;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 
@@ -51,12 +50,12 @@ impl JwtToken {
         }
     }
 
-    pub fn decode_from_request(req: HttpRequest) -> Result<JwtToken, &'static str> {
-        match req.headers().get("user-token") {
-            Some(token) => JwtToken::decode(String::from(token.to_str().unwrap())),
-            None => Err("There is no token in request ")
-        }
-    }
+    // pub fn decode_from_request(req: HttpRequest) -> Result<JwtToken, &'static str> {
+    //     match req.headers().get("user-token") {
+    //         Some(token) => JwtToken::decode(String::from(token.to_str().unwrap())),
+    //         None => Err("There is no token in request ")
+    //     }
+    // }
 }
 
 

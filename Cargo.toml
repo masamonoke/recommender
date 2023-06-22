@@ -12,7 +12,7 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 futures = "0.3.7"
 serde = "1"
 actix-service = "1.0.6"
-diesel = { version = "1.4.4", features = ["postgres"] }
+diesel = { version = "2", features = ["postgres"] }
 dotenv = "0.15.0"
 bcrypt = "0.8.2"
 uuid = { version = "0.8", features = ["serde", "v4"] }
@@ -28,3 +28,4 @@ openssl = "*"
 
 chrono = "0.4.24"
 actix-cors = "0.5.4"
+diesel-enum = "0.1.0"

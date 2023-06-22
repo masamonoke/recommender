@@ -7,7 +7,7 @@ use crate::schema::users;
 
 
 #[derive(Insertable, Clone)]
-#[table_name="users"]
+#[diesel(table_name = users)]
 pub struct NewUser {
     pub name:String,
     pub email: String,
