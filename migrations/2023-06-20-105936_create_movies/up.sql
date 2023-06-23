@@ -30,6 +30,7 @@ INSERT INTO genre (name) VALUES ('Mystery');
 INSERT INTO genre (name) VALUES ('Thriller');
 INSERT INTO genre (name) VALUES ('Animation');
 INSERT INTO genre (name) VALUES ('Music');
+INSERT INTO genre (name) VALUES ('Musical');
 INSERT INTO genre (name) VALUES ('Film-Noir');
 INSERT INTO genre (name) VALUES ('Adult');
 INSERT INTO genre (name) VALUES ('Talk-Show');

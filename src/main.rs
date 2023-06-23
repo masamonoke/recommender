@@ -10,9 +10,8 @@ mod schema;
 mod database;
 mod json_serialization;
 mod auth;
+mod service;
 
-//extern crate dotenv;
-//use env_logger;
 use dotenv::dotenv;
 
 #[actix_rt::main]
@@ -22,12 +21,6 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         
         let cors = Cors::permissive();
-        // let cors = Cors::default()
-        //       .allowed_origin("http://localhost:8080")
-        //       .allowed_methods(vec!["GET", "POST"])
-        //       .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-        //       .allowed_header(http::header::CONTENT_TYPE)
-        //       .max_age(3600);
 
         let app = App::new()
             .wrap_fn(|req, routing| {

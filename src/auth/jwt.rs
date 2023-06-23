@@ -18,7 +18,7 @@ pub struct JwtToken {
 }
 
 impl JwtToken {
-    // TODO: secret string should be replaced by something more secure
+    // TODO: secret string should be replaced by something more secure and be get from file
     pub fn encode(user_id: i32) -> String {
         let key: Hmac<Sha256> = Hmac::new_varkey(b"secret").unwrap();
         let mut claims = BTreeMap::new();
