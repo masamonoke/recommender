@@ -2,3 +2,4 @@
 .*
 rusty-tags.*
 venv
+__*

@@ -24,6 +24,17 @@ diesel::table! {
 }
 
 diesel::table! {
+    ratings (id) {
+        id -> Int4,
+        user_id -> Varchar,
+        movie_id -> Varchar,
+        rating -> Int4,
+        rating_timestamp -> Timestamp,
+        rating_type -> Varchar,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
@@ -40,5 +51,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     genre,
     movie_genre,
     movies,
+    ratings,
     users,
 );

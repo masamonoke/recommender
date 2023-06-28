@@ -20,8 +20,6 @@ pub struct Genre {
     name: String
 }
 
-// TODO: probably better replace with MovieWithGeneres
-// that consist of Movie object and array of Genre
 #[derive(Debug, Queryable, Identifiable, Clone)]
 #[diesel(table_name = movie_genre)]
 pub struct MovieGenre {

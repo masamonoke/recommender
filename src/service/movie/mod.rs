@@ -1,6 +1,6 @@
-use crate::{diesel, schema::{movies, genre}, model::movie::movie::{Movie, Genre, MovieWithGeneres}};
+use crate::{diesel, schema::{movies, genre}, model::movie::{Movie, Genre, MovieWithGeneres}};
 use diesel::prelude::*;
-use crate::{schema::movie_genre, model::movie::movie::MovieGenre};
+use crate::{schema::movie_genre, model::movie::MovieGenre};
 
 // TODO: optimize query
 pub fn get_all_movies(connection: &mut PgConnection) -> Vec<MovieWithGeneres> {
