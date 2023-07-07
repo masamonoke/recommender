@@ -26,6 +26,6 @@ pretty_env_logger = "0.2"
 # Needed for Postgres.
 openssl = "*"
 
-chrono = "0.4.24"
+chrono = { version = "0.4.24", features = ["serde"] }
 actix-cors = "0.5.4"
 diesel-enum = "0.1.0"

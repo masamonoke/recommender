@@ -1,17 +1,25 @@
 from fill_movies import *
 from fill_ratings import *
+from fill_gen_evidence import fill_evidence_logs
 from dotenv import load_dotenv
 import argparse
 import sys
 
+NUMBER_OF_EVENTS = 10000
+
 def main():
     load_dotenv()
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--len", help="Load first len entities from dataset")
+    parser.add_argument("-m", "--mlen", help="Load first len entities from dataset")
+    parser.add_argument("-e", "--elen", help="How much evidence log generated. Default is 10000")
     parser.add_argument("-a", action="store_true")
     args = parser.parse_args()
 
-    movies = get_movies_data(length=int(args.len), load_all=args.a) if args.len != None else get_movies_data(length=None)
+    l = int(args.mlen) if args.mlen != None else None
+    if l != None:
+        movies = get_movies_data(length=l, load_all=args.a)
+    else:
+        movies = get_movies_data(load_all=args.a)
     movies_dict = dict()
     for movie in movies:
         movies_dict[movie.movie_id] = movie
@@ -30,6 +38,9 @@ def main():
 
         truncate("ratings", cursor)
         fill_ratings(ratings, cursor)
+
+        truncate("evidence_log", cursor)
+        fill_evidence_logs(int(args.elen), cursor) if args.elen != None else fill_evidence_logs(NUMBER_OF_EVENTS, cursor)
 
     except Exception as error:
         print("Error while connecting to PostgreSQL", error)

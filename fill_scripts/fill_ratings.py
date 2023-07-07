@@ -49,38 +49,9 @@ def fill_ratings(ratings, cursor):
     query = '''
         INSERT INTO ratings (user_id, movie_id, rating, rating_timestamp, rating_type) VALUES(%s, %s, %s, %s, %s);
     '''
+    print("Filling ratings table")
     for rating in tqdm(ratings):
         cursor.execute(query, 
             (rating.user_id, rating.movie_id, rating.rating, rating.rating_timestamp, rating.rating_type))
     
     print("Filled ratings table")
-
-
-# def main():
-#     load_dotenv()
-#     ratings = get_ratings_list()
-
-#     try:
-#         conn = get_connection()
-#         cursor = conn.cursor()
-#         cursor.execute("SELECT version();")
-#         record = cursor.fetchone()
-#         print("You are connected to - ", record, "\n")
-
-#         truncate("ratings", cursor)
-
-#         fill_ratings(ratings, cursor)
-    
-#     except Exception as error:
-#             print("Error while connecting to PostgreSQL", error)
-    
-#     finally:
-#         if (conn):
-#             cursor.close()
-#             conn.close()
-#             print("PostgreSQL connection is closed")
-
-
-# if __name__ == "__main__":
-#     main()
-

@@ -1,5 +1,6 @@
 /target
 .*
-rusty-tags.*
+rusty-tags.vi
 venv
 __*
+tags

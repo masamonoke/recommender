@@ -1,6 +1,17 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    evidence_log (id) {
+        id -> Int4,
+        created -> Timestamp,
+        content_id -> Varchar,
+        event -> Varchar,
+        session_id -> Varchar,
+        user_id -> Varchar,
+    }
+}
+
+diesel::table! {
     genre (id) {
         id -> Int4,
         name -> Varchar,
@@ -48,6 +59,7 @@ diesel::joinable!(movie_genre -> genre (genre_id));
 diesel::joinable!(movie_genre -> movies (movie_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    evidence_log,
     genre,
     movie_genre,
     movies,
