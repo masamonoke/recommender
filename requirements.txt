@@ -1,5 +1,7 @@
-requests
-psycopg2
-python-dotenv
-tqdm
-argparse
+requests~=2.31.0
+psycopg2~=2.9.6
+python-dotenv~=1.0.0
+tqdm~=4.65.0
+argparse~=1.4.0
+pandas~=2.0.3
+matplotlib~=3.7.2
