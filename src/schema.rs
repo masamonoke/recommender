@@ -39,7 +39,7 @@ diesel::table! {
         id -> Int4,
         user_id -> Varchar,
         movie_id -> Varchar,
-        rating -> Int4,
+        rating -> Numeric,
         rating_timestamp -> Timestamp,
         rating_type -> Varchar,
     }
