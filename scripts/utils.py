@@ -1,6 +1,7 @@
 import psycopg2
 import os
 from urllib.parse import urlparse
+import random
 
 def get_connection():
     db_url = os.getenv("DATABASE_URL")
@@ -26,4 +27,12 @@ def truncate(name: str, cursor: psycopg2.extensions.cursor):
     '''
     cursor.execute(query)
     print(f"{name} table successfully truncated")
+
+def weighted_sample(dictionary):
+    random_num = random.randint(0, 100)
+    x = 0
+    for k, v in dictionary.items():
+        x += v
+        if random_num <= x:
+            return k
 

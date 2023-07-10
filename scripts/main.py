@@ -1,5 +1,5 @@
 from fill_movies import *
-from fill_ratings import *
+from fill_explicit_ratings import *
 from fill_gen_evidence import fill_evidence_logs
 from dotenv import load_dotenv
 import argparse
@@ -12,14 +12,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mlen", help="Load first len entities from dataset")
     parser.add_argument("-e", "--elen", help="How much evidence log generated. Default is 10000")
-    parser.add_argument("-a", action="store_true")
     args = parser.parse_args()
 
     l = int(args.mlen) if args.mlen != None else None
     if l != None:
-        movies = get_movies_data(length=l, load_all=args.a)
+        movies = get_movies_data(length=l)
     else:
-        movies = get_movies_data(load_all=args.a)
+        movies = get_movies_data(load_all=True)
     movies_dict = dict()
     for movie in movies:
         movies_dict[movie.movie_id] = movie

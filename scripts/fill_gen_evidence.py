@@ -2,6 +2,8 @@ import csv
 import random
 from datetime import datetime
 from tqdm import tqdm
+from models import User, EvidenceLog
+from utils import weighted_sample
 
 def read_csv_to_dict(f = "films.csv"):
     films = dict()
@@ -22,22 +24,6 @@ def read_csv_to_dict(f = "films.csv"):
 
     return films
 
-class User:
-    def __init__(self, user_id, action_ratio, drama_ratio, comedy_ratio):
-        self.session_id = random.randint(0, 1000000)
-        self.user_id = user_id
-        self.likes = { "action": action_ratio, "drama": drama_ratio, "comedy": comedy_ratio }
-        self.events = { self.session_id: [] }
-
-    def get_session_id(self):
-        if random.randint(0, 100) > 90:
-            self.session_id += 1
-            self.events[self.session_id] = []
-        return self.session_id
-
-    def select_genre(self):
-        return weighted_sample(self.likes)
-
 def select_film(user, films):
     genre = user.select_genre()
     interested_films = films[genre]
@@ -53,14 +39,6 @@ ACTIONS_WEIGHTS = {'genreView': 15, 'details': 50, 'moreDetails': 24, 'addToList
 
 def select_action(user):
     return weighted_sample(ACTIONS_WEIGHTS)
-
-def weighted_sample(dictionary):
-    random_num = random.randint(0, 100)
-    x = 0
-    for k, v in dictionary.items():
-        x += v
-        if random_num <= x:
-            return k
 
 def save_logs(logs, cursor):
     query = '''
@@ -78,17 +56,6 @@ def save_logs(logs, cursor):
             (log.created_timestamp, log.content_id, log.event, log.session_id, log.user_id))
     
     print("Filled evidence_log table")
-
-class EvidenceLog:
-    def __init__(self, user_id, content_id, event, session_id, created_timestamp):
-        self.user_id = user_id
-        self.content_id = content_id
-        self.event = event
-        self.session_id = session_id
-        self.created_timestamp = created_timestamp
-    
-    def __str__(self):
-        return f"Log: {self.user_id}, {self.content_id}, {self.event}, {self.session_id}, {self.created_timestamp}"
 
 def fill_evidence_logs(length, cursor):
     films = read_csv_to_dict()

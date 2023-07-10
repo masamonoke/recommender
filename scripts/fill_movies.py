@@ -4,16 +4,7 @@ from urllib.parse import urlparse
 from utils import get_connection, truncate
 from tqdm import tqdm
 import psycopg2
-
-class Movie:
-    def __init__(self, movie_id: str, title: str, year: int, genres: list):
-        self.movie_id = movie_id
-        self.title = title
-        self.year = year
-        self.genres = genres
-    
-    def __str__(self):
-        return f"Movie: {self.movie_id}, {self.title}, {self.year}, {self.genres}"
+from models import Movie
 
 def get_movie_from_dataset_entity(enity: str):
     parts = enity.split("::")
