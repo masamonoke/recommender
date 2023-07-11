@@ -1,11 +1,11 @@
-from fill_movies import *
-from fill_explicit_ratings import *
-from fill_gen_evidence import fill_evidence_logs
-from dotenv import load_dotenv
 import argparse
 import sys
 
-NUMBER_OF_EVENTS = 10000
+from movies import *
+from ratings import build_explicit_ratings, build_implicit_ratings
+from evidence_log import fill_evidence_logs
+from dotenv import load_dotenv
+from users import User, save_users
 
 def main():
     load_dotenv()
@@ -19,12 +19,7 @@ def main():
         movies = get_movies_data(length=l)
     else:
         movies = get_movies_data(load_all=True)
-    movies_dict = dict()
-    for movie in movies:
-        movies_dict[movie.movie_id] = movie
-    
-    ratings = get_ratings_list(movies_dict)
-    
+        
     try:
         connection = get_connection()
         cursor = connection.cursor()
@@ -36,19 +31,33 @@ def main():
         fill_movies(cursor, movies) 
 
         truncate("ratings", cursor)
-        fill_ratings(ratings, cursor)
+        movies_dict = dict()
+        for movie in movies:
+            movies_dict[movie.movie_id] = movie
+        build_explicit_ratings(movies_dict, cursor)
 
+        # several personas with tastes expressed in likes ratio
+        users = [
+            User(1, 20, 30, 50),
+            User(2, 50, 20, 40),
+            User(3, 20, 30, 50),
+            User(4, 100, 0, 0),
+            User(5, 0, 100, 0),
+            User(6, 0, 0, 100)
+        ]
+        save_users(users, cursor)
         truncate("evidence_log", cursor)
-        fill_evidence_logs(int(args.elen), cursor) if args.elen != None else fill_evidence_logs(NUMBER_OF_EVENTS, cursor)
+        fill_evidence_logs(users, cursor, int(args.elen)) if args.elen != None else fill_evidence_logs(users, cursor)
+        build_implicit_ratings(cursor)
 
-    except Exception as error:
-        print("Error while connecting to PostgreSQL", error)
-    
+    except psycopg2.Error as error:
+        print("Pyscopg error: ", error)
+
     finally:
         if (connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
+            print("Connection closed")
 
 if __name__ == "__main__":
     main()

@@ -9,7 +9,7 @@ pub struct Log {
     content_id: String,
     event: String,
     session_id: String,
-    user_id: String
+    user_id: i32
 }
 
 #[derive(Insertable, Deserialize)]
@@ -19,11 +19,11 @@ pub struct NewLog {
     content_id: String,
     event: String,
     session_id: String,
-    user_id: String
+    user_id: i32
 }
 
 impl NewLog {
-    pub fn new(created: chrono::NaiveDateTime, content_id: String, event: String, session_id: String, user_id: String) -> NewLog {
+    pub fn new(created: chrono::NaiveDateTime, content_id: String, event: String, session_id: String, user_id: i32) -> NewLog {
         NewLog {created, content_id, event, session_id, user_id}
     }
 }

@@ -2,8 +2,21 @@ import csv
 import random
 from datetime import datetime
 from tqdm import tqdm
-from models import User, EvidenceLog
+from users import User
 from utils import weighted_sample
+import psycopg2
+from utils import truncate
+
+class EvidenceLog:
+    def __init__(self, user_id, content_id, event, session_id, created_timestamp):
+        self.user_id = user_id
+        self.content_id = content_id
+        self.event = event
+        self.session_id = session_id
+        self.created_timestamp = created_timestamp
+    
+    def __str__(self):
+        return f"Log: {self.user_id}, {self.content_id}, {self.event}, {self.session_id}, {self.created_timestamp}"
 
 def read_csv_to_dict(f = "films.csv"):
     films = dict()
@@ -57,18 +70,9 @@ def save_logs(logs, cursor):
     
     print("Filled evidence_log table")
 
-def fill_evidence_logs(length, cursor):
+def fill_evidence_logs(users: list, cursor, length: int = 10000):
     films = read_csv_to_dict()
-    # several personas with tastes expressed in likes ratio
-    users = [
-        User(2, 20, 30, 50),
-        User(3, 50, 20, 40),
-        User(4, 20, 30, 50),
-        User(5, 100, 0, 0),
-        User(6, 0, 100, 0),
-        User(7, 0, 0, 100)
-    ]
-   
+
     logs = list()
 
     for _ in range(0, length):

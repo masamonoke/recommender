@@ -6,7 +6,7 @@ use bigdecimal::BigDecimal;
 #[derive(Debug, Queryable, Clone, Identifiable)]
 pub struct Rating {
     id: i32,
-    user_id: String,
+    user_id: i32,
     movie_id: String,
     rating: BigDecimal,
     rating_timestamp: chrono::NaiveDateTime,

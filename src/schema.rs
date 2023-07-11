@@ -7,7 +7,7 @@ diesel::table! {
         content_id -> Varchar,
         event -> Varchar,
         session_id -> Varchar,
-        user_id -> Varchar,
+        user_id -> Int4,
     }
 }
 
@@ -37,7 +37,7 @@ diesel::table! {
 diesel::table! {
     ratings (id) {
         id -> Int4,
-        user_id -> Varchar,
+        user_id -> Int4,
         movie_id -> Varchar,
         rating -> Numeric,
         rating_timestamp -> Timestamp,
@@ -55,6 +55,7 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(evidence_log -> users (user_id));
 diesel::joinable!(movie_genre -> genre (genre_id));
 diesel::joinable!(movie_genre -> movies (movie_id));
 

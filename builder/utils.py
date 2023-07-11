@@ -3,6 +3,7 @@ import os
 from urllib.parse import urlparse
 import random
 
+# needs env to get db url
 def get_connection():
     db_url = os.getenv("DATABASE_URL")
     parsed_url = urlparse(db_url)

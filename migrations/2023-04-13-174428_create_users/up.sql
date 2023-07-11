@@ -1,4 +1,3 @@
---- Your SQL goes here
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
@@ -8,9 +7,4 @@ CREATE TABLE users (
   UNIQUE (email),
   UNIQUE (name)
 );
-
--- create a master user
-INSERT INTO users (name, email, password, unique_id)
-VALUES ('placeholder', 'placeholder email',
-'placeholder password', 'placeholder unique id');
 

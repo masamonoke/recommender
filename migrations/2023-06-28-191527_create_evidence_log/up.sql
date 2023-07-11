@@ -4,7 +4,7 @@ CREATE TABLE evidence_log (
 	content_id VARCHAR(16) NOT NULL,
 	event VARCHAR(200) NOT NULL,
 	session_id VARCHAR(128) NOT NULL,
-	user_id VARCHAR(16) NOT NULL
+	user_id INTEGER NOT NULL REFERENCES users(id)
 );
 -- example
 --INSERT INTO evidence_log (created, content_id, event, session_id, user_id) 
