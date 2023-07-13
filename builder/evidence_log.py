@@ -1,11 +1,10 @@
-import csv
 import random
 from datetime import datetime
 from tqdm import tqdm
 from users import User
 from utils import weighted_sample
 import psycopg2
-from utils import truncate
+from utils import truncate, read_csv_to_dict
 
 class EvidenceLog:
     def __init__(self, user_id, content_id, event, session_id, created_timestamp):
@@ -17,25 +16,6 @@ class EvidenceLog:
     
     def __str__(self):
         return f"Log: {self.user_id}, {self.content_id}, {self.event}, {self.session_id}, {self.created_timestamp}"
-
-def read_csv_to_dict(f = "films.csv"):
-    films = dict()
-
-    with open("films.csv", "r") as file:
-        reader = csv.reader(file)
-        first_row = False
-        for row in reader:
-            if not first_row:
-                first_row = True
-                genres = row[0].split(";")
-                for genre in genres:
-                    films[genre] = list()
-            else:
-                items = row[0].split(";")
-                for genre, item in zip(films.keys(), items):
-                    films[genre].append(item)
-
-    return films
 
 def select_film(user, films):
     genre = user.select_genre()

@@ -9,7 +9,10 @@ pub fn get_all_movies(connection: &mut PgConnection) -> Vec<MovieWithGeneres> {
         .load::<MovieGenre>(connection)
         .unwrap();
 
-    let all_movies = movies::table.select(Movie::as_select()).load(connection).unwrap();
+    let all_movies = movies::table
+        .select(Movie::as_select())
+        .load(connection)
+        .unwrap();
 
     let genres = genre::table.select(Genre::as_select()).load(connection).unwrap();
 

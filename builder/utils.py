@@ -1,7 +1,10 @@
 import psycopg2
 import os
-from urllib.parse import urlparse
 import random
+import csv
+
+from urllib.parse import urlparse
+
 
 # needs env to get db url
 def get_connection():
@@ -37,3 +40,21 @@ def weighted_sample(dictionary):
         if random_num <= x:
             return k
 
+def read_csv_to_dict(f = "films.csv"):
+    films = dict()
+
+    with open("films.csv", "r") as file:
+        reader = csv.reader(file)
+        first_row = False
+        for row in reader:
+            if not first_row:
+                first_row = True
+                genres = row[0].split(";")
+                for genre in genres:
+                    films[genre] = list()
+            else:
+                items = row[0].split(";")
+                for genre, item in zip(films.keys(), items):
+                    films[genre].append(item)
+
+    return films

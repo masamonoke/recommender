@@ -2,14 +2,14 @@ use serde::Serialize;
 
 use crate::schema::{movies, movie_genre, genre};
 
-#[derive(Debug, Queryable, Clone, Associations, Serialize, Identifiable, Selectable)]
+#[derive(Debug, Queryable, Clone, Associations, Serialize, Identifiable, Selectable, PartialEq)]
 #[diesel(primary_key(movie_id))]
 #[diesel(table_name = movies)]
 #[diesel(belongs_to(MovieGenre, foreign_key = movie_id))]
 pub struct Movie {
     pub movie_id: String,
-    title: String,
-    year: Option<i32>,
+    pub title: String,
+    pub year: Option<i32>,
 }
 
 #[derive(Debug, Queryable, Clone, Identifiable, Associations, Serialize, Selectable)]

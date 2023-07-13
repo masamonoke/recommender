@@ -55,6 +55,7 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(evidence_log -> movies (content_id));
 diesel::joinable!(evidence_log -> users (user_id));
 diesel::joinable!(movie_genre -> genre (genre_id));
 diesel::joinable!(movie_genre -> movies (movie_id));

@@ -7,6 +7,7 @@ mod analytics;
 mod movies;
 mod ratings;
 mod evidence;
+mod recommender;
 
 pub fn views_factory(app: &mut web::ServiceConfig) {
     auth::auth_factory(app);
@@ -15,4 +16,5 @@ pub fn views_factory(app: &mut web::ServiceConfig) {
     movies::movie_factory(app);
     ratings::ratings_factory(app);
     evidence::evidence_factory(app);
+    recommender::recommender_factory(app);
 }

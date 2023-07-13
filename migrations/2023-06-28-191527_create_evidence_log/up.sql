@@ -1,7 +1,7 @@
 CREATE TABLE evidence_log (
 	id SERIAL PRIMARY KEY NOT NULL,
 	created TIMESTAMP NOT NULL,
-	content_id VARCHAR(16) NOT NULL,
+	content_id VARCHAR(16) NOT NULL REFERENCES movies(movie_id),
 	event VARCHAR(200) NOT NULL,
 	session_id VARCHAR(128) NOT NULL,
 	user_id INTEGER NOT NULL REFERENCES users(id)

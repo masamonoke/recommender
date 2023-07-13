@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Path {
     pub prefix: String,
     pub backend: bool
