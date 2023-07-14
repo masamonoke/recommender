@@ -1,4 +1,3 @@
-
 use diesel::{ExpressionMethods, RunQueryDsl, PgConnection};
 use diesel::prelude::*;
 
@@ -39,18 +38,20 @@ impl std::cmp::Ord for MovieCounted {
 }
 
 pub fn chart(connection: &mut PgConnection) -> Vec<Movie> {
-    // TODO: not yet found reason why this doesn't work and for now use workaround below
+    // TODO: not yet found reason why this doesn't work and for now use workaround below, probably
+    // use some other lib like scooby for solution
+    //
     // let res: Vec<ChartedLog> = sql_query("
     //     SELECT content_id, movies.title, count(*) as sold
     //     FROM evidence_log
     //     JOIN movies ON evidence_log.content_id = movies.movie_id
-    //     WHERE event like 'buy'
+    //     WHERE event LIKE 'buy'
     //     GROUP BY content_id, movies.title
     //     ORDER BY sold DESC LIMIT 10;
     // ")
     //     .get_result(connection)
     //     .unwrap();
- 
+
     let all_movies = movies::table
         .select(Movie::as_select())
         .load(connection)

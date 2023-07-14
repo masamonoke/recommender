@@ -29,6 +29,7 @@ impl NewLog {
     }
 }
 
+// WARNING: not used yet, if sql_type problem not solved then will be deleted
 #[derive(QueryableByName)]
 pub struct ChartedLog {
     #[diesel(sql_type = VarChar)]

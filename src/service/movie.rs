@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::{diesel, schema::{movies, genre}, model::movie::{Movie, Genre, MovieWithGeneres}};
 use diesel::prelude::*;
 use crate::{schema::movie_genre, model::movie::MovieGenre};
@@ -31,4 +33,42 @@ pub fn get_all_movies(connection: &mut PgConnection) -> Vec<MovieWithGeneres> {
     }
 
     movies
+}
+
+pub fn get_limited_movies(connection: &mut PgConnection, limit: i64) -> Vec<MovieWithGeneres> {
+    let limited_movies = movies::table
+        .order(movies::columns::year.desc())
+        .select(Movie::as_select())
+        .limit(limit)
+        .load(connection)
+        .unwrap();
+
+    let movies_genres = MovieGenre::belonging_to(&limited_movies)
+        .select(MovieGenre::as_select())
+        .load(connection)
+        .unwrap();
+
+    let genres_list: HashMap<i32, Genre> = genre::table
+        .select(Genre::as_select())
+        .load(connection)
+        .unwrap()
+        .iter()
+        .map(|genre| (genre.id, genre.to_owned()))
+        .collect();
+
+    let genres_per_movie = movies_genres
+        .grouped_by(&limited_movies)
+        .into_iter()
+        .zip(limited_movies)
+        .map(|(genres, movie)| {
+            let movie_genres: Vec<Genre> = genres
+                .iter()
+                .map(|genre| genres_list.get(&genre.genre_id).unwrap().clone())
+                .collect::<Vec<Genre>>();
+
+            MovieWithGeneres { movie, genres: movie_genres }
+        })
+        .collect::<Vec<MovieWithGeneres>>(); 
+
+        genres_per_movie
 }

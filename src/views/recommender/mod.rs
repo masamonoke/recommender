@@ -7,8 +7,7 @@ use super::path::Path;
 pub fn recommender_factory(app: &mut web::ServiceConfig) {
     let base_path = Path{prefix: String::from("/recommender"), backend: false};
     app.route(
-        &base_path.define(String::from("/chart")), 
-        web::get().to(chart)
+        &base_path.define(String::from("/chart")), web::get().to(chart)
     );
 }
 
