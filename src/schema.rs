@@ -46,6 +46,17 @@ diesel::table! {
 }
 
 diesel::table! {
+    seeded_recs (id) {
+        id -> Int4,
+        created -> Timestamp,
+        source -> Varchar,
+        target -> Varchar,
+        support -> Numeric,
+        confidence -> Numeric,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
@@ -66,5 +77,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     movie_genre,
     movies,
     ratings,
+    seeded_recs,
     users,
 );

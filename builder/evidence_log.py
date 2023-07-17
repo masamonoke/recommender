@@ -50,7 +50,7 @@ def save_logs(logs, cursor):
     
     print("Filled evidence_log table")
 
-def fill_evidence_logs(users: list, cursor, length: int = 10000):
+def fill_evidence_logs(users: list, cursor, length: int = 100000):
     films = read_csv_to_dict()
 
     logs = list()

@@ -48,7 +48,7 @@ pub fn get_limited_movies(connection: &mut PgConnection, limit: i64) -> Vec<Movi
         .load(connection)
         .unwrap();
 
-    let genres_list: HashMap<i32, Genre> = genre::table
+    let genres_map: HashMap<i32, Genre> = genre::table
         .select(Genre::as_select())
         .load(connection)
         .unwrap()
@@ -63,7 +63,7 @@ pub fn get_limited_movies(connection: &mut PgConnection, limit: i64) -> Vec<Movi
         .map(|(genres, movie)| {
             let movie_genres: Vec<Genre> = genres
                 .iter()
-                .map(|genre| genres_list.get(&genre.genre_id).unwrap().clone())
+                .map(|genre| genres_map.get(&genre.genre_id).unwrap().clone())
                 .collect::<Vec<Genre>>();
 
             MovieWithGeneres { movie, genres: movie_genres }
