@@ -28,7 +28,7 @@ pub struct MovieGenre {
     pub genre_id: i32,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub struct MovieWithGeneres {
     pub movie: Movie,
     pub genres: Vec<Genre>

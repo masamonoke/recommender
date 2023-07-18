@@ -1,9 +1,13 @@
 use diesel::{ExpressionMethods, RunQueryDsl, PgConnection};
 use diesel::prelude::*;
 
+use crate::model::movie::MovieWithGeneres;
+use crate::model::recs::SeededRec;
 use crate::model::{movie::Movie, evidence::Log};
 use crate::schema::evidence_log::{dsl::*, self};
-use crate::schema::movies;
+use crate::schema::{movies, seeded_recs};
+
+use super::movie::{get_movie_by_id, get_movies_with_genres_from_movies_list};
 
 struct MovieCounted {
     movie: Movie,
@@ -20,7 +24,6 @@ impl PartialEq for MovieCounted {
 
 impl PartialOrd for MovieCounted {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        // TODO: add match
         if other.count.partial_cmp(&self.count).unwrap() == std::cmp::Ordering::Equal {
             let y1 = other.movie.year.unwrap_or_default();
             let y2 = self.movie.year.unwrap_or_default();
@@ -37,25 +40,14 @@ impl std::cmp::Ord for MovieCounted {
     }
 }
 
+//heavy request should be cached for all sessions and execute only several times per day, maybe per week
 pub fn chart(connection: &mut PgConnection) -> Vec<Movie> {
-    // TODO: not yet found reason why this doesn't work and for now use workaround below, probably
-    // use some other lib like scooby for solution
-    //
-    // let res: Vec<ChartedLog> = sql_query("
-    //     SELECT content_id, movies.title, count(*) as sold
-    //     FROM evidence_log
-    //     JOIN movies ON evidence_log.content_id = movies.movie_id
-    //     WHERE event LIKE 'buy'
-    //     GROUP BY content_id, movies.title
-    //     ORDER BY sold DESC LIMIT 10;
-    // ")
-    //     .get_result(connection)
-    //     .unwrap();
-
     let all_movies = movies::table
         .select(Movie::as_select())
         .load(connection)
         .unwrap();
+
+    let all_movies = get_movies_with_genres_from_movies_list(connection, all_movies);
 
     let logs = evidence_log::table
         .select(Log::as_select())
@@ -65,8 +57,8 @@ pub fn chart(connection: &mut PgConnection) -> Vec<Movie> {
 
     let mut counted_movies = vec![];
     for movie in all_movies {
-        let movie_buys_count = logs.iter().filter(|l| l.content_id == movie.movie_id).count();
-        let value = MovieCounted { movie, count: movie_buys_count };
+        let movie_buys_count = logs.iter().filter(|l| l.content_id == movie.movie.movie_id).count();
+        let value = MovieCounted { movie: movie.movie, count: movie_buys_count };
         counted_movies.push(value);
     }
     counted_movies.sort();
@@ -74,4 +66,16 @@ pub fn chart(connection: &mut PgConnection) -> Vec<Movie> {
     let top_movies: Vec<Movie> = counted_movies.iter().map(|v| v.movie.clone()).take(10).collect();
 
     top_movies
+
+}
+
+pub fn get_associated_with_objects(connection: &mut PgConnection, movie_id: String) -> Vec<MovieWithGeneres>{
+    seeded_recs::table
+        .select(SeededRec::as_select())
+        .filter(seeded_recs::columns::source.eq(movie_id))
+        .load(connection)
+        .unwrap()
+        .iter()
+        .map(|rec| get_movie_by_id(connection, rec.target.clone()).unwrap())
+        .collect::<Vec<MovieWithGeneres>>()
 }

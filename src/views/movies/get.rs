@@ -1,6 +1,6 @@
 use actix_web::{HttpRequest, Responder, web};
 use log::{error, info};
-use crate::{database::establish_connection, service::movie::{get_all_movies, get_limited_movies}};
+use crate::{database::establish_connection, service::movie::{get_all_movies, get_limited_movies, get_movie_by_id}};
 use qstring::QString;
 
 const DEFAULT_LIMIT: i64 = 100;
@@ -30,5 +30,12 @@ pub async fn get(req: HttpRequest) -> impl Responder {
     };
  
     web::Json(movies)
+}
+
+pub async fn get_by_id(req: HttpRequest) -> impl Responder {
+    let mut connection = establish_connection();
+    let id = req.match_info().get("movie_id").unwrap();
+    let movie = get_movie_by_id(&mut connection, id.to_string());
+    web::Json(movie)
 }
 
