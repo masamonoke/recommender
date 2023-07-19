@@ -1,8 +1,9 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 use crate::schema::{movies, movie_genre, genre};
+use redis_derive::FromRedisValue;
 
-#[derive(Debug, Queryable, Clone, Serialize, Identifiable, Selectable, PartialEq)]
+#[derive(Debug, Queryable, Clone, Serialize, Identifiable, Selectable, PartialEq, FromRedisValue, Deserialize)]
 #[diesel(primary_key(movie_id))]
 #[diesel(table_name = movies)]
 pub struct Movie {

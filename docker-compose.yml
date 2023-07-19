@@ -12,3 +12,14 @@ services:
       - 'POSTGRES_USER=masamonoke'
       - 'POSTGRES_DB=recommender-backend'
       - 'POSTGRES_PASSWORD=password'
+
+  redis:
+      image: redis/redis-stack
+      volumes:
+        - redis_data:/data:rw
+      ports:
+        - 6379:6379
+      restart: unless-stopped
+
+volumes:
+  redis_data:

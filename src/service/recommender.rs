@@ -64,9 +64,8 @@ pub fn chart(connection: &mut PgConnection) -> Vec<Movie> {
     counted_movies.sort();
 
     let top_movies: Vec<Movie> = counted_movies.iter().map(|v| v.movie.clone()).take(10).collect();
-
+    
     top_movies
-
 }
 
 pub fn get_associated_with_objects(connection: &mut PgConnection, movie_id: String) -> Vec<MovieWithGeneres>{

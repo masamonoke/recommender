@@ -6,6 +6,7 @@ from ratings import build_explicit_ratings, build_implicit_ratings
 from evidence_log import fill_evidence_logs
 from dotenv import load_dotenv
 from users import User, save_users
+from association_rules import build_seeded_recs
 
 def main():
     load_dotenv()
@@ -49,6 +50,8 @@ def main():
         truncate("evidence_log", cursor)
         fill_evidence_logs(users, cursor, int(args.elen)) if args.elen != None else fill_evidence_logs(users, cursor)
         build_implicit_ratings(cursor)
+        
+        build_seeded_recs(cursor)
 
     except psycopg2.Error as error:
         print("Pyscopg error: ", error)

@@ -1,5 +1,7 @@
-use actix_web::{web, Responder, HttpRequest};
-use crate::{database::establish_connection, service::recommender::{self, get_associated_with_objects}};
+use actix_web::{web::{self}, Responder, HttpRequest};
+use log::{info, error};
+use redis::{JsonCommands, RedisResult, FromRedisValue};
+use crate::{database::{establish_connection, establish_redis_connection}, service::recommender::{self, get_associated_with_objects}, model::movie::{MovieWithGeneres, Movie}};
 
 use super::path::Path;
 
@@ -15,8 +17,33 @@ pub fn recommender_factory(app: &mut web::ServiceConfig) {
 }
 
 async fn chart(_req: HttpRequest) ->  impl Responder {
-    let mut connection = establish_connection();
-    web::Json(recommender::chart(&mut connection))
+    let mut redis_connection = establish_redis_connection();
+    let mut movies: Vec<Movie> = vec![];
+    match redis_connection.json_get("chart", "$") {
+        Ok(m) => {
+            let json: String = m;
+            info!("Got values from redis \n{:?}", json);
+            let mut chars = json.chars();
+            chars.next();
+            chars.next_back();
+            let json = chars.as_str();
+            movies = serde_json::from_str(&json).unwrap();
+        },
+        Err(e) => {
+            error!("Cannot get value chart\n{}", e);
+        }
+    };
+    if movies.len() == 0 {
+            info!("Chart isn't cached. Calculating...");
+            let mut connection = establish_connection();
+            movies = recommender::chart(&mut connection);
+            let res: RedisResult<bool> = redis_connection.json_set("chart", "$", &movies);
+            match res {
+                Ok(_) => info!("Successfully saved chart to redis cache"),
+                Err(e) => error!("Cannot save chart to redis cache {}", e)
+            }
+    }
+    web::Json(movies)
 }
 
 async fn associated_movies(req: HttpRequest) -> impl Responder {
