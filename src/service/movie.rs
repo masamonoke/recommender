@@ -4,16 +4,6 @@ use crate::{diesel, schema::{movies, genre}, model::movie::{Movie, Genre, MovieW
 use diesel::prelude::*;
 use crate::model::movie::MovieGenre;
 
-// TODO: probably delete
-pub fn get_all_movies(connection: &mut PgConnection) -> Vec<MovieWithGeneres> {
-    let all_movies = movies::table
-        .select(Movie::as_select())
-        .load(connection)
-        .unwrap();
-
-    get_movies_with_genres_from_movies_list(connection, all_movies)
-}
-
 pub fn get_limited_movies(connection: &mut PgConnection, limit: i64) -> Vec<MovieWithGeneres> {
     let limited_movies = movies::table
         .order(movies::columns::year.desc())

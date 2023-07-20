@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 use crate::schema::{movies, movie_genre, genre};
 use redis_derive::FromRedisValue;
 
-#[derive(Debug, Queryable, Clone, Serialize, Identifiable, Selectable, PartialEq, FromRedisValue, Deserialize)]
+#[derive(Debug, Queryable, Clone, Serialize, Identifiable, Selectable, PartialEq, FromRedisValue, Deserialize, Eq, Hash)]
 #[diesel(primary_key(movie_id))]
 #[diesel(table_name = movies)]
 pub struct Movie {
@@ -12,7 +12,7 @@ pub struct Movie {
     pub year: Option<i32>,
 }
 
-#[derive(Debug, Queryable, Clone, Identifiable, Associations, Serialize, Selectable)]
+#[derive(Debug, Queryable, Clone, Identifiable, Associations, Serialize, Selectable, PartialEq, Eq, Hash)]
 #[diesel(table_name = genre)]
 #[diesel(belongs_to(MovieGenre, foreign_key = id))]
 pub struct Genre {
@@ -29,8 +29,10 @@ pub struct MovieGenre {
     pub genre_id: i32,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, PartialEq, Eq, Hash)]
 pub struct MovieWithGeneres {
     pub movie: Movie,
     pub genres: Vec<Genre>
 } 
+
+

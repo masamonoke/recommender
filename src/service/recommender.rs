@@ -4,10 +4,13 @@ use diesel::prelude::*;
 use crate::model::movie::MovieWithGeneres;
 use crate::model::recs::SeededRec;
 use crate::model::{movie::Movie, evidence::Log};
+// TODO: remove dsl import
 use crate::schema::evidence_log::{dsl::*, self};
 use crate::schema::{movies, seeded_recs};
 
 use super::movie::{get_movie_by_id, get_movies_with_genres_from_movies_list};
+
+use itertools::Itertools;
 
 struct MovieCounted {
     movie: Movie,
@@ -77,4 +80,30 @@ pub fn get_associated_with_objects(connection: &mut PgConnection, movie_id: Stri
         .iter()
         .map(|rec| get_movie_by_id(connection, rec.target.clone()).unwrap())
         .collect::<Vec<MovieWithGeneres>>()
+}
+
+// TODO: optimize
+pub fn get_recs_from_associations(connection: &mut PgConnection, u_id: i32) -> Vec<MovieWithGeneres>{
+    let logs = evidence_log::table
+        .select(Log::as_select())
+        .order(evidence_log::columns::created.desc())
+        .filter(evidence_log::columns::user_id.eq(u_id))
+        .limit(20)
+        .load(connection)
+        .unwrap();
+
+    let mut movies: Vec<MovieWithGeneres> = vec![];
+    for log in logs {
+        let mut recs: Vec<MovieWithGeneres> = seeded_recs::table
+            .select(SeededRec::as_select())
+            .filter(seeded_recs::columns::source.eq(log.content_id))
+            .load(connection)
+            .unwrap()
+            .iter()
+            .map(|rec| get_movie_by_id(connection, rec.target.clone()).unwrap())
+            .collect::<Vec<MovieWithGeneres>>();
+        movies.append(&mut recs);
+    }
+
+    movies.into_iter().unique().collect()
 }

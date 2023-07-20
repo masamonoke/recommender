@@ -1,6 +1,6 @@
 use actix_web::{HttpRequest, Responder, web};
 use log::{error, info};
-use crate::{database::establish_connection, service::movie::{get_all_movies, get_limited_movies, get_movie_by_id}};
+use crate::{database::establish_connection, service::movie::{get_limited_movies, get_movie_by_id}};
 use qstring::QString;
 
 const DEFAULT_LIMIT: i64 = 100;
@@ -24,8 +24,8 @@ pub async fn get(req: HttpRequest) -> impl Responder {
             get_limited_movies(&mut connection, limit)
         },
         None => {
-            info!("Handling unlimited movies request");
-            get_all_movies(&mut connection)
+            info!("Handling default limited = {} movies request", DEFAULT_LIMIT);
+            get_limited_movies(&mut connection, DEFAULT_LIMIT)
         }
     };
  
