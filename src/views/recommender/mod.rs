@@ -65,6 +65,7 @@ async fn associated_movies(req: HttpRequest) -> impl Responder {
     web::Json(movies)
 }
 
+// TODO: make jwt check before proceed
 async fn get_recs_from_associations(req: HttpRequest) -> impl Responder {
     let mut conn = establish_connection();
     let user_id = req.match_info().get("user_id").unwrap().parse::<i32>();

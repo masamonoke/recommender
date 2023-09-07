@@ -20,7 +20,7 @@ def main():
         movies = get_movies_data(length=l)
     else:
         movies = get_movies_data(load_all=True)
-        
+
     try:
         connection = get_connection()
         cursor = connection.cursor()
@@ -29,7 +29,7 @@ def main():
         print("You are connected to - ", record, "\n")
 
         truncate("movies", cursor)
-        fill_movies(cursor, movies) 
+        fill_movies(cursor, movies)
 
         truncate("ratings", cursor)
         movies_dict = dict()
@@ -50,7 +50,7 @@ def main():
         truncate("evidence_log", cursor)
         fill_evidence_logs(users, cursor, int(args.elen)) if args.elen != None else fill_evidence_logs(users, cursor)
         build_implicit_ratings(cursor)
-        
+
         build_seeded_recs(cursor)
 
     except psycopg2.Error as error:

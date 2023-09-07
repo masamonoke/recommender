@@ -1,6 +1,14 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    clusters (id) {
+        id -> Int4,
+        cluster_id -> Int4,
+        user_id -> Int4,
+    }
+}
+
+diesel::table! {
     evidence_log (id) {
         id -> Int4,
         created -> Timestamp,
@@ -72,6 +80,7 @@ diesel::joinable!(movie_genre -> genre (genre_id));
 diesel::joinable!(movie_genre -> movies (movie_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    clusters,
     evidence_log,
     genre,
     movie_genre,

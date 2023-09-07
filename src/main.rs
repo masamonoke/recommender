@@ -19,7 +19,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     pretty_env_logger::init();
     HttpServer::new(|| {
-        
+
         let cors = Cors::permissive();
 
         let app = App::new()
@@ -50,7 +50,7 @@ async fn main() -> std::io::Result<()> {
             })
             .configure(views::views_factory)
             .wrap(cors);
-            
+
         return app;
     }).bind("127.0.0.1:3000")?.run().await
 }
