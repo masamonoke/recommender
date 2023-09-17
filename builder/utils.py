@@ -25,13 +25,18 @@ def get_connection():
     connection.autocommit = True
     return connection
 
-# TODO: add alter sequence
 def truncate(name: str, cursor: psycopg2.extensions.cursor):
     query = f'''
         TRUNCATE TABLE {name} CASCADE;
     '''
     cursor.execute(query)
     print(f"{name} table successfully truncated")
+    query = f'''
+        ALTER SEQUENCE {name}_id_seq RESTART WITH 1;
+    '''
+    cursor.execute(query)
+    print(f"restored id sequence in table '{name}'")
+
 
 def weighted_sample(dictionary):
     random_num = random.randint(0, 100)

@@ -68,9 +68,6 @@ def save(cursor: cursor, corr: numpy.ndarray, movie_indicies: dict, timestamp=da
     # compressed sparse row matrix
     csr = coo.tocsr()
     truncate("similarity", cursor)
-    query = '''
-        ALTER SEQUENCE similarity_id_seq RESTART WITH 1;
-    '''
     cursor.execute(query)
     query = '''
         INSERT INTO similarity (created, source, target, similarity)

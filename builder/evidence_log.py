@@ -13,7 +13,7 @@ class EvidenceLog:
         self.event = event
         self.session_id = session_id
         self.created_timestamp = created_timestamp
-    
+
     def __str__(self):
         return f"Log: {self.user_id}, {self.content_id}, {self.event}, {self.session_id}, {self.created_timestamp}"
 
@@ -34,20 +34,16 @@ def select_action(user):
     return weighted_sample(ACTIONS_WEIGHTS)
 
 def save_logs(logs, cursor):
-    query = '''
-        ALTER SEQUENCE evidence_log_id_seq RESTART WITH 1                                
-    '''
-    cursor.execute(query)
-    print("Reset id sequence in evidence_log table")
+    truncate("evidence_log", cursor)
     query = '''
         INSERT INTO evidence_log (created, content_id, event, session_id, user_id)
         VALUES (%s, %s, %s, %s, %s);
     '''
     print("Filling evidence_log table")
     for log in tqdm(logs):
-        cursor.execute(query, 
+        cursor.execute(query,
             (log.created_timestamp, log.content_id, log.event, log.session_id, log.user_id))
-    
+
     print("Filled evidence_log table")
 
 def fill_evidence_logs(users: list, cursor, length: int = 100000):

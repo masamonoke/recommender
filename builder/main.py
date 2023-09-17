@@ -28,7 +28,6 @@ def main():
         record = cursor.fetchone()
         print("You are connected to - ", record, "\n")
 
-        truncate("movies", cursor)
         fill_movies(cursor, movies)
 
         truncate("ratings", cursor)
@@ -46,11 +45,10 @@ def main():
             User(5, 0, 100, 0),
             User(6, 0, 0, 100)
         ]
+
         save_users(users, cursor)
-        truncate("evidence_log", cursor)
         fill_evidence_logs(users, cursor, int(args.elen)) if args.elen != None else fill_evidence_logs(users, cursor)
         build_implicit_ratings(cursor)
-
         build_seeded_recs(cursor)
 
     except psycopg2.Error as error:

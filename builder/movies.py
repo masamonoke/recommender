@@ -12,7 +12,7 @@ class Movie:
         self.title = title
         self.year = year
         self.genres = genres
-    
+ 
     def __str__(self):
         return f"Movie: {self.movie_id}, {self.title}, {self.year}, {self.genres}"
 
@@ -50,16 +50,12 @@ def get_movies_data(length = None, load_all = False, url = "https://raw.githubus
     return movies_list
 
 def fill_movies(cursor: psycopg2.extensions.cursor, movies: list):
-    query = '''
-        ALTER SEQUENCE movie_genre_id_seq RESTART WITH 1                                
-    '''
-    cursor.execute(query)
-    print("Reset id sequence in movie_genre table")
+    truncate("movies", cursor)
     movies_query = '''
-        INSERT INTO movies (movie_id, title, year) VALUES (%s, %s, %s); 
+        INSERT INTO movies (movie_id, title, year) VALUES (%s, %s, %s);
     '''
     query = '''
-        SELECT * FROM genre                                
+        SELECT * FROM genre;
     '''
     cursor.execute(query)
     genres_fetch = cursor.fetchall()
@@ -77,6 +73,6 @@ def fill_movies(cursor: psycopg2.extensions.cursor, movies: list):
         for genre in movie.genres:
             if genre == '':
                 continue
-            genre_id = genres_dict[genre] 
+            genre_id = genres_dict[genre]
             cursor.execute(genre_query, (movie.movie_id, genre_id))
     print("Filled movies and movie_genre table")

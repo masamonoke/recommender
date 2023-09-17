@@ -60,7 +60,7 @@ names = ['Oliver', 'George', 'Noah', 'Arthur', 'Harry',
            'Grace', 'Emilia', 'Stella', 'Zoe', 'Victoria',
            'Zahra', 'Jamie', 'Allyson', 'Anahi', 'Karla ',
            'Johanna', 'Hayley', 'Freyja', 'Florence', 'Bridget',
-           'Joelle', 'Roselyn', 'Aila', 'Katelyn', 'Lea', 
+           'Joelle', 'Roselyn', 'Aila', 'Katelyn', 'Lea',
 ]
 
 emails_ending = ['yahoo.com', 'gmail.com', 'yandex.ru', 'mail.ru']
@@ -87,9 +87,5 @@ def get_all_users_data_from_db(cursor: psycopg2.extensions.cursor) -> list:
 
 def save_users(users: list, cursor: psycopg2.extensions.cursor):
     truncate("users", cursor)
-    query = '''
-        ALTER SEQUENCE users_id_seq RESTART WITH 1; 
-    '''
-    cursor.execute(query)
     for user in users:
         user.save_to_db(cursor)

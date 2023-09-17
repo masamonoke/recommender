@@ -106,10 +106,6 @@ def calculate_support_confidence(transactions: dict, min_support=0.01):
 
 def save_to_db(rules: list, cursor: extensions.cursor):
     query = '''
-        ALTER SEQUENCE seeded_recs_id_seq RESTART WITH 1                                
-    '''
-    cursor.execute(query)
-    query = '''
         INSERT INTO seeded_recs (created, source, target, support, confidence)
         VALUES (%s, %s, %s, %s, %s);
     '''
