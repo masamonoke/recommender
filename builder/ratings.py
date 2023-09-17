@@ -10,11 +10,11 @@ from dotenv import load_dotenv
 from users import get_all_users_data_from_db
 
 class Rating:
-    def __init__(self, 
+    def __init__(self,
                  user_id: str,
-                 movie_id: str, 
-                 rating: int, 
-                 rating_timestamp: datetime, 
+                 movie_id: str,
+                 rating: int,
+                 rating_timestamp: datetime,
                  rating_type: str):
         self.user_id = user_id
         self.movie_id = movie_id
@@ -53,9 +53,9 @@ def fill_ratings(ratings: list, cursor: psycopg2.extensions.cursor):
     '''
     print(f"Filling ratings table with ratings")
     for rating in tqdm(ratings):
-        cursor.execute(query, 
+        cursor.execute(query,
             (rating.user_id, rating.movie_id, rating.rating, rating.rating_timestamp, rating.rating_type))
-    
+
     print(f"Filled ratings table with ratings")
 
 # buy weight
@@ -79,7 +79,7 @@ def get_user_evidence_data(user_id: str, cursor: psycopg2.extensions.cursor) -> 
     '''
     cursor.execute(query, (user_id,))
     user_data = cursor.fetchall()
-    
+
     if len(user_data) == 0:
         print(f"Not enough evidence data to calculate implicit ratings for user_id={user_id}")
         return None
@@ -102,7 +102,7 @@ def calculate_implicit_rating(user_id: str, data: dict) -> list:
     ratings = dict()
     # for normalization
     max_rating = 0
-    
+
     for movie_id, v in data.items():
         rating = w1 * v["buy"] + w2 * v["details"] + w3 * v["moredetails"]
         max_rating = max(rating, max_rating)

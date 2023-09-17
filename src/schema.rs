@@ -65,6 +65,16 @@ diesel::table! {
 }
 
 diesel::table! {
+    similarity (id) {
+        id -> Int4,
+        created -> Timestamp,
+        source -> Varchar,
+        target -> Varchar,
+        similarity -> Numeric,
+    }
+}
+
+diesel::table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
@@ -87,5 +97,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     movies,
     ratings,
     seeded_recs,
+    similarity,
     users,
 );

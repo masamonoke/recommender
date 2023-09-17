@@ -25,6 +25,7 @@ def get_connection():
     connection.autocommit = True
     return connection
 
+# TODO: add alter sequence
 def truncate(name: str, cursor: psycopg2.extensions.cursor):
     query = f'''
         TRUNCATE TABLE {name} CASCADE;

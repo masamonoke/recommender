@@ -1,0 +1,7 @@
+CREATE TABLE similarity (
+	id SERIAL PRIMARY KEY NOT NULL,
+	created TIMESTAMP NOT NULL,
+	source VARCHAR(50) NOT NULL,
+	target VARCHAR(50) NOT NULL,
+	similarity DECIMAL NOT NULL
+);
