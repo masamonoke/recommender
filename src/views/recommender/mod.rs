@@ -2,8 +2,8 @@ use actix_web::{web::{self}, Responder, HttpRequest};
 use log::{info, error};
 use redis::{JsonCommands, RedisResult};
 use crate::{
-    database::{establish_connection, establish_redis_connection}, 
-    service::recommender::{self, get_associated_with_objects}, 
+    database::{establish_connection, establish_redis_connection},
+    service::recommender::{self, get_associated_with_objects},
     model::movie::Movie
 };
 
@@ -16,13 +16,18 @@ pub fn recommender_factory(app: &mut web::ServiceConfig) {
         &base_path.define(String::from("/chart")), web::get().to(chart)
     );
     app.route(
-        &base_path.define(String::from("/associated/{movie_id}")), 
+        &base_path.define(String::from("/associated/{movie_id}")),
         web::get().to(associated_movies)
     );
     app.route(
         &base_path.define(String::from("/associated/user/{user_id}")),
         web::get().to(get_recs_from_associations)
     );
+    app.route(
+        &base_path.define(String::from("/content_based/{user_id}")),
+        web::get().to(get_recs_from_ratings)
+    );
+
 }
 
 
@@ -77,5 +82,18 @@ async fn get_recs_from_associations(req: HttpRequest) -> impl Responder {
         }
     };
 
+    web::Json(movies)
+}
+
+async fn get_recs_from_ratings(req: HttpRequest) -> impl Responder {
+    let mut conn = establish_connection();
+    let user_id = req.match_info().get("user_id").unwrap().parse::<i32>();
+    let movies = match user_id {
+        Ok(user_id) => recommender::get_recs_from_ratings(&mut conn, user_id),
+        Err(e) => {
+            error!("user_id parse_error: {}", e);
+            vec![]
+        }
+    };
     web::Json(movies)
 }

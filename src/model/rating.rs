@@ -7,8 +7,8 @@ use bigdecimal::BigDecimal;
 pub struct Rating {
     id: i32,
     user_id: i32,
-    movie_id: String,
-    rating: BigDecimal,
+    pub movie_id: String,
+    pub rating: BigDecimal,
     rating_timestamp: chrono::NaiveDateTime,
     rating_type: String
 }

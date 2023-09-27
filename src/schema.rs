@@ -70,7 +70,8 @@ diesel::table! {
         created -> Timestamp,
         source -> Varchar,
         target -> Varchar,
-        similarity -> Numeric,
+        #[sql_name = "similarity"]
+        sim -> Numeric,
     }
 }
 

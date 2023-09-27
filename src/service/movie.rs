@@ -26,6 +26,13 @@ pub fn get_movie_by_id(connection: &mut PgConnection, movie_id: String) -> Optio
     movie.first().cloned()
 }
 
+// pub fn get_movies_with_genres_by_id(connection: &mut PgConnection, movies_id: Vec<String>) -> Vec<MovieWithGeneres> {
+//     movies_id
+//         .iter()
+//         .map(|m| get_movie_by_id(connection, m.clone()).unwrap()) // TODO: fix unwrap
+//         .collect_vec()
+// }
+
 pub fn get_movies_with_genres_from_movies_list(connection: &mut PgConnection, movies_list: Vec<Movie>) -> Vec<MovieWithGeneres> {
     let movies_genres = MovieGenre::belonging_to(&movies_list)
     .select(MovieGenre::as_select())
